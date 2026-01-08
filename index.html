@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Withdrawal Safety Monitor</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        .warning { background-color: #ffebee; border-left: 6px solid #f44336; padding: 15px; margin-bottom: 20px; }
+        .question { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .question label { font-weight: bold; display: block; margin-bottom: 5px; }
+        .slider-container { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { flex-grow: 1; }
+        .score-display { font-size: 1.2em; font-weight: bold; color: #007bff; }
+        .result-box { margin-top: 30px; padding: 20px; border-radius: 5px; text-align: center; font-size: 1.2em; font-weight: bold; }
+        .safe { background-color: #e8f5e9; color: #2e7d32; border: 2px solid #2e7d32; }
+        .moderate { background-color: #fff3e0; color: #ef6c00; border: 2px solid #ef6c00; }
+        .severe { background-color: #ffebee; color: #c62828; border: 2px solid #c62828; }
+        button { display: block; width: 100%; padding: 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 1.2em; cursor: pointer; margin-top: 20px; }
+        button:hover { background-color: #0056b3; }
+        .vitals { background: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="warning">
+        <strong>⚠️ EMERGENCY WARNING:</strong> This is NOT a medical device. If the patient has seizures, passes out, or is extremely confused, <strong>CALL 999 IMMEDIATELY</strong>.
+    </div>
+
+    <h1>🛡️ Alcohol Withdrawal Monitor (CIWA-Ar)</h1>
+    
+    <div class="vitals">
+        <h3>❤️ Vitals Check</h3>
+        <label>Heart Rate (BPM):</label>
+        <input type="number" id="heartRate" placeholder="e.g. 80" style="padding: 5px; width: 100px;">
+        <div id="hrWarning" style="color: red; font-weight: bold; margin-top: 5px;"></div>
+    </div>
+
+    <form id="ciwaForm">
+        <div class="question">
+            <label>1. Nausea and Vomiting (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q1" min="0" max="7" value="0" oninput="updateLabel('l1', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l1" class="score-display">0 - No nausea</div>
+        </div>
+
+        <div class="question">
+            <label>2. Tremor (Arms extended) (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q2" min="0" max="7" value="0" oninput="updateLabel('l2', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l2" class="score-display">0 - No tremor</div>
+        </div>
+
+        <div class="question">
+            <label>3. Paroxysmal Sweats (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q3" min="0" max="7" value="0" oninput="updateLabel('l3', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l3" class="score-display">0 - No sweat visible</div>
+        </div>
+
+        <div class="question">
+            <label>4. Anxiety (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q4" min="0" max="7" value="0" oninput="updateLabel('l4', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l4" class="score-display">0 - No anxiety</div>
+        </div>
+
+        <div class="question">
+            <label>5. Agitation (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q5" min="0" max="7" value="0" oninput="updateLabel('l5', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l5" class="score-display">0 - Normal activity</div>
+        </div>
+
+        <div class="question">
+            <label>6. Tactile Disturbances (Itching/Bugs) (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q6" min="0" max="7" value="0" oninput="updateLabel('l6', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l6" class="score-display">0 - None</div>
+        </div>
+
+        <div class="question">
+            <label>7. Auditory Disturbances (Hearing things) (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q7" min="0" max="7" value="0" oninput="updateLabel('l7', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l7" class="score-display">0 - Not present</div>
+        </div>
+
+        <div class="question">
+            <label>8. Visual Disturbances (Seeing things/Light hurts) (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q8" min="0" max="7" value="0" oninput="updateLabel('l8', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l8" class="score-display">0 - Not present</div>
+        </div>
+
+        <div class="question">
+            <label>9. Headache / Fullness in head (0-7)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q9" min="0" max="7" value="0" oninput="updateLabel('l9', this.value)">
+                <span>7</span>
+            </div>
+            <div id="l9" class="score-display">0 - Not present</div>
+        </div>
+
+        <div class="question">
+            <label>10. Orientation (What day is it?) (0-4)</label>
+            <div class="slider-container">
+                <span>0</span>
+                <input type="range" id="q10" min="0" max="4" value="0" oninput="updateLabel('l10', this.value)">
+                <span>4</span>
+            </div>
+            <div id="l10" class="score-display">0 - Fully Oriented</div>
+        </div>
+
+        <button type="button" onclick="calculateScore()">CALCULATE RISK SCORE</button>
+    </form>
+
+    <div id="result" class="result-box" style="display:none;"></div>
+</div>
+
+<script>
+    function updateLabel(id, val) {
+        document.getElementById(id).innerText = "Selected Severity: " + val;
+    }
+
+    function calculateScore() {
+        let score = 0;
+        for (let i = 1; i <= 10; i++) {
+            score += parseInt(document.getElementById('q' + i).value);
+        }
+
+        let hr = parseInt(document.getElementById('heartRate').value);
+        let hrMsg = "";
+        if (hr > 100) {
+            document.getElementById('hrWarning').innerText = "🚨 HIGH HEART RATE (" + hr + ")";
+            hrMsg = "<br><br><strong>NOTE:</strong> Heart rate is dangerously high.";
+        } else {
+            document.getElementById('hrWarning').innerText = "";
+        }
+
+        let resultBox = document.getElementById('result');
+        resultBox.style.display = "block";
+        
+        if (score < 10) {
+            resultBox.className = "result-box safe";
+            resultBox.innerHTML = "Total Score: " + score + "<br>Status: MILD Withdrawal<br><span style='font-size:0.8em'>Keep monitoring. Usually no medication needed.</span>" + hrMsg;
+        } else if (score >= 10 && score <= 15) {
+            resultBox.className = "result-box moderate";
+            resultBox.innerHTML = "Total Score: " + score + "<br>Status: MODERATE Withdrawal<br><span style='font-size:0.8em'>Medication likely needed to prevent seizure. Consult doctor.</span>" + hrMsg;
+        } else {
+            resultBox.className = "result-box severe";
+            resultBox.innerHTML = "Total Score: " + score + "<br>Status: SEVERE Withdrawal<br><span style='font-size:0.8em'>🚨 HIGH RISK of Seizure/DTs. Call 999 or go to ER immediately.</span>" + hrMsg;
+        }
+    }
+</script>
+
+</body>
+</html>
